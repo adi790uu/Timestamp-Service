@@ -18,15 +18,59 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+function padZero(num) {
+  return num < 10 ? "0" + num : num;
+}
+
 
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
+app.get("/api/:date", function (req, res) {
+  let date;
+  
+  if(!req.params.date) {
 
+    date = new Date();
+
+  }else if(isNaN(req.params.date)){
+
+    date = new Date(req.params.date);
+
+  }else {
+
+    date = new Date(parseInt(req.params.date));
+
+  }
+  // const dateObj = new Date(date);
+  // console.log(dateObj)
+
+  if(isNaN(date)) {
+    return res.json({error: "Invalid Date"})
+  }
+  
+  const day = date.getUTCDay();
+  const dat = date.getUTCDate();
+  const month = date.getUTCMonth();
+  const year = date.getUTCFullYear();
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const seconds = date.getUTCSeconds();
+
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const outputDate = weekdays[day] + ", " + padZero(dat) + " " + months[month] + " " + year + " " + padZero(hours) + ":" + padZero(minutes) + ":" + padZero(seconds) + " GMT";
+
+  const unixTimestamp = date.getTime();
+  
+  res.json({unix: unixTimestamp, utc: outputDate})
+
+  
+});
 
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+var listener = app.listen(3000, function () {
+  console.log('Your app is listening on port ' + 3000);
 });
+
+// listener.address().port
