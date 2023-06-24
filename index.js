@@ -27,11 +27,7 @@ function padZero(num) {
 app.get("/api/:date", function (req, res) {
   let date;
   
-  if(!req.params.date) {
-
-    date = new Date();
-
-  }else if(isNaN(req.params.date)){
+  if(isNaN(req.params.date)){
 
     date = new Date(req.params.date);
 
@@ -66,6 +62,27 @@ app.get("/api/:date", function (req, res) {
 
   
 });
+
+app.get('/api', (req, res) => {
+  const date = new Date();
+
+  const day = date.getUTCDay();
+  const dat = date.getUTCDate();
+  const month = date.getUTCMonth();
+  const year = date.getUTCFullYear();
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const seconds = date.getUTCSeconds();
+
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const outputDate = weekdays[day] + ", " + padZero(dat) + " " + months[month] + " " + year + " " + padZero(hours) + ":" + padZero(minutes) + ":" + padZero(seconds) + " GMT";
+
+  const unixTimestamp = date.getTime();
+  
+  res.json({unix: unixTimestamp, utc: outputDate})
+})
 
 
 // listen for requests :)
